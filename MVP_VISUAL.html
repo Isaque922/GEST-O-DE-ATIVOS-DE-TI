@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MVP - Gestão de Ativos de TI</title>
+<style>
+:root{--bg:#f4f7f8;--panel:#fff;--nav:#071521;--nav2:#0c2630;--text:#1d2d35;--muted:#71828a;--line:#e3e9ec;--accent:#16b99c;--accent2:#0b8f79;--warn:#c98518;--danger:#b94848;--shadow:0 8px 30px rgba(22,43,53,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.sidebar{background:var(--nav);color:#dce7eb;padding:24px 18px;display:flex;flex-direction:column;gap:22px}.brand{display:flex;gap:12px;align-items:center;padding:4px 8px 18px;border-bottom:1px solid #15323f}.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#1e8fa2);display:grid;place-items:center;font-size:20px}.brand b{display:block;font-size:14px}.brand small{color:#7f9aa5}.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;color:#8da6b0;text-align:left;padding:12px 13px;border-radius:10px;cursor:pointer}.nav button:hover,.nav button.active{background:var(--nav2);color:#5de2ca}.userbox{margin-top:auto;border-top:1px solid #15323f;padding:16px 8px 0}.userbox b{font-size:12px}.userbox small{display:block;color:#7f9aa5;margin-top:4px}.main{padding:30px 34px 48px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.topbar h1{font-size:28px;margin:0}.topbar p{margin:5px 0 0;color:var(--muted);font-size:13px}.pill{padding:8px 12px;border-radius:999px;background:#e5f8f4;color:#147d6c;font-size:12px;font-weight:700}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.card{padding:20px}.card span{font-size:12px;color:var(--muted)}.card strong{display:block;font-size:28px;margin:10px 0 4px}.card small{font-size:11px;color:#8c9aa0}.grid2{display:grid;grid-template-columns:1.4fr .9fr;gap:18px}.panel{padding:20px}.panel h3{margin:0 0 16px;font-size:15px}.locations{display:grid;gap:11px}.locrow{display:grid;grid-template-columns:1fr 1.6fr 48px;align-items:center;gap:12px;font-size:12px}.bar{height:9px;border-radius:999px;background:#edf2f3;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}.tablewrap{overflow:auto}.toolbar{display:flex;gap:12px;justify-content:space-between;margin-bottom:16px}.search{flex:1;max-width:460px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px}.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}.btn.primary{background:var(--accent);color:#062019}.btn.secondary{background:#eef3f5;color:#334951}.btn.danger{background:#faecec;color:var(--danger)}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:13px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:#70818a;font-size:11px}.status{display:inline-block;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:700}.uso{background:#e4f7f2;color:#147b68}.disp{background:#eef3f5;color:#64747c}.man{background:#fff2da;color:#9c6612}.baix{background:#fae8e8;color:#a84444}.page{display:none}.page.active{display:block}.list{display:grid;gap:12px}.item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item b{font-size:12px}.item span{display:block;color:var(--muted);font-size:11px;margin-top:4px}.badge{font-size:10px;padding:6px 8px;border-radius:8px;background:#edf4f5;color:#49616a}.loginmock{max-width:720px;margin:0 auto;background:linear-gradient(135deg,#071521,#123843);border-radius:20px;padding:32px;color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}.loginmock h2{font-size:30px;margin:0 0 12px}.loginmock p{color:#a5bdc5;line-height:1.5}.loginbox{background:#fff;color:#24363f;padding:22px;border-radius:14px}.field{display:grid;gap:6px;margin-bottom:12px}.field label{font-size:11px;color:#687b84}.field input{padding:11px;border:1px solid #dce5e8;border-radius:9px}.note{font-size:11px;color:#71828a;margin-top:12px}.footerhint{margin-top:20px;color:#809198;font-size:11px}.modal{position:fixed;inset:0;background:#071521aa;display:none;place-items:center;padding:20px}.modal.open{display:grid}.modalbox{background:#fff;width:min(620px,100%);border-radius:16px;padding:24px}.modalbox h3{margin-top:0}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.formgrid input,.formgrid select{width:100%;padding:10px;border:1px solid #dce5e8;border-radius:9px}.modalactions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{position:static}.nav{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.loginmock{grid-template-columns:1fr}.main{padding:22px}.userbox{display:none}}@media(max-width:560px){.cards{grid-template-columns:1fr}.nav{grid-template-columns:1fr}.toolbar{flex-direction:column}.formgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">◈</div><div><b>Gestão de Ativos TI</b><small>Complexo Tucuruí</small></div></div>
+  <div class="nav">
+    <button class="active" data-page="dashboard">▦ Visão geral</button>
+    <button data-page="ativos">▣ Ativos</button>
+    <button data-page="cautelas">✓ Cautelas</button>
+    <button data-page="usuarios">◎ Colaboradores</button>
+    <button data-page="manutencao">⚙ Manutenções</button>
+    <button data-page="historico">↺ Histórico</button>
+    <button data-page="login">⇥ Tela de login</button>
+  </div>
+  <div class="userbox"><b>Técnico de TI</b><small>Matrícula 1001 · Administrador</small></div>
+</aside>
+<main class="main">
+<section id="dashboard" class="page active">
+  <div class="topbar"><div><h1>Visão geral</h1><p>Resumo do inventário de equipamentos de TI do Complexo Tucuruí</p></div><span class="pill">MVP demonstrativo</span></div>
+  <div class="cards">
+    <div class="card"><span>Total de ativos</span><strong>128</strong><small>Inventário consolidado</small></div>
+    <div class="card"><span>Em uso</span><strong>93</strong><small>Vinculados a colaboradores</small></div>
+    <div class="card"><span>Disponíveis</span><strong>24</strong><small>Prontos para alocação</small></div>
+    <div class="card"><span>Em manutenção</span><strong>11</strong><small>Em atendimento técnico</small></div>
+  </div>
+  <div class="grid2">
+    <div class="panel"><h3>Distribuição por localidade</h3><div class="locations">
+      <div class="locrow"><b>UHE Tucuruí</b><div class="bar"><i style="width:82%"></i></div><span>52</span></div>
+      <div class="locrow"><b>SE Tucuruí</b><div class="bar"><i style="width:55%"></i></div><span>31</span></div>
+      <div class="locrow"><b>CTT</b><div class="bar"><i style="width:40%"></i></div><span>24</span></div>
+      <div class="locrow"><b>CPA</b><div class="bar"><i style="width:34%"></i></div><span>21</span></div>
+    </div></div>
+    <div class="panel"><h3>Atividades recentes</h3><div class="list">
+      <div class="item"><div><b>Notebook TU-11891 transferido</b><span>Mariana Souza · CTT</span></div><span class="badge">há 12 min</span></div>
+      <div class="item"><div><b>Desktop TU-09721 disponível</b><span>SE Tucuruí</span></div><span class="badge">há 1 h</span></div>
+      <div class="item"><div><b>Notebook TU-12542 em manutenção</b><span>UHE Tucuruí</span></div><span class="badge">hoje</span></div>
+    </div></div>
+  </div>
+</section>
+
+<section id="ativos" class="page">
+  <div class="topbar"><div><h1>Ativos</h1><p>Cadastro, consulta e movimentação de equipamentos</p></div></div>
+  <div class="panel"><div class="toolbar"><input class="search" id="assetSearch" placeholder="Buscar por patrimônio, modelo, responsável ou local..."><button class="btn primary" onclick="openModal()">+ Novo ativo</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Patrimônio</th><th>Tipo</th><th>Equipamento</th><th>Local</th><th>Responsável</th><th>Status</th></tr></thead><tbody id="assetRows">
+    <tr><td><b>TU-10482</b></td><td>Desktop</td><td>Dell OptiPlex 7090</td><td>UHE Tucuruí</td><td>Carlos Almeida</td><td><span class="status uso">Em uso</span></td></tr>
+    <tr><td><b>TU-11891</b></td><td>Notebook</td><td>Dell Latitude 5420</td><td>CTT</td><td>Mariana Souza</td><td><span class="status uso">Em uso</span></td></tr>
+    <tr><td><b>TU-12103</b></td><td>Monitor</td><td>Dell P2422H</td><td>CPA</td><td>Rafael Costa</td><td><span class="status uso">Em uso</span></td></tr>
+    <tr><td><b>TU-09721</b></td><td>Desktop</td><td>HP ProDesk 400</td><td>SE Tucuruí</td><td>—</td><td><span class="status disp">Disponível</span></td></tr>
+    <tr><td><b>TU-12542</b></td><td>Notebook</td><td>Lenovo ThinkPad E14</td><td>UHE Tucuruí</td><td>—</td><td><span class="status man">Manutenção</span></td></tr>
+  </tbody></table></div></div>
+</section>
+
+<section id="cautelas" class="page"><div class="topbar"><div><h1>Cautelas</h1><p>Equipamentos vinculados a colaboradores</p></div></div><div class="panel"><div class="list">
+  <div class="item"><div><b>TU-10482 · Dell OptiPlex 7090</b><span>Carlos Almeida · Matrícula 84215 · UHE Tucuruí</span></div><button class="btn secondary">Transferir</button></div>
+  <div class="item"><div><b>TU-11891 · Dell Latitude 5420</b><span>Mariana Souza · Matrícula 73104 · CTT</span></div><button class="btn secondary">Transferir</button></div>
+  <div class="item"><div><b>TU-12103 · Dell P2422H</b><span>Rafael Costa · Matrícula 90217 · CPA</span></div><button class="btn secondary">Transferir</button></div>
+</div></div></section>
+
+<section id="usuarios" class="page"><div class="topbar"><div><h1>Colaboradores</h1><p>Usuários do sistema e responsáveis por ativos</p></div></div><div class="panel"><div class="toolbar"><input class="search" placeholder="Buscar matrícula ou nome..."><button class="btn primary">+ Novo colaborador</button></div><div class="tablewrap"><table><thead><tr><th>Matrícula</th><th>Nome</th><th>Tipo</th><th>Perfil</th><th>Situação</th></tr></thead><tbody>
+<tr><td>1001</td><td>Técnico de TI</td><td>Quadro</td><td>Administrador</td><td><span class="status uso">Ativo</span></td></tr>
+<tr><td>84215</td><td>Carlos Almeida</td><td>Quadro</td><td>Usuário</td><td><span class="status uso">Ativo</span></td></tr>
+<tr><td>73104</td><td>Mariana Souza</td><td>Quadro</td><td>Usuário</td><td><span class="status uso">Ativo</span></td></tr>
+<tr><td>90217</td><td>Rafael Costa</td><td>Terceiro</td><td>Usuário</td><td><span class="status uso">Ativo</span></td></tr>
+</tbody></table></div></div></section>
+
+<section id="manutencao" class="page"><div class="topbar"><div><h1>Manutenções</h1><p>Acompanhamento de equipamentos indisponíveis</p></div></div><div class="panel"><div class="list">
+<div class="item"><div><b>TU-12542 · Lenovo ThinkPad E14</b><span>Falha de inicialização · UHE Tucuruí · Aberta em 14/09/2026</span></div><span class="status man">Em andamento</span></div>
+<div class="item"><div><b>TU-11020 · Monitor Dell</b><span>Troca de fonte · SE Tucuruí · Aberta em 12/09/2026</span></div><span class="status disp">Concluída</span></div>
+</div></div></section>
+
+<section id="historico" class="page"><div class="topbar"><div><h1>Histórico</h1><p>Trilha de auditoria das movimentações</p></div></div><div class="panel"><div class="list">
+<div class="item"><div><b>TRANSFERIDO · TU-11891</b><span>Equipamento transferido para Mariana Souza · CTT</span></div><span class="badge">14/09/2026 19:42</span></div>
+<div class="item"><div><b>ATUALIZADO · TU-09721</b><span>Status alterado para Disponível · SE Tucuruí</span></div><span class="badge">14/09/2026 17:10</span></div>
+<div class="item"><div><b>MANUTENÇÃO · TU-12542</b><span>Chamado de manutenção aberto</span></div><span class="badge">14/09/2026 09:05</span></div>
+</div></div></section>
+
+<section id="login" class="page"><div class="loginmock"><div><h2>Gestão de Ativos de TI</h2><p>Acesso centralizado ao inventário de desktops, notebooks e monitores do Complexo Tucuruí.</p><div class="footerhint">UHE · SE Tucuruí · CTT · CPA</div></div><div class="loginbox"><h3>Acessar sistema</h3><div class="field"><label>Matrícula</label><input value="1001"></div><div class="field"><label>Senha</label><input type="password" value="admin123"></div><button class="btn primary" style="width:100%">Entrar</button><div class="note">MVP visual. Nesta demonstração o botão não autentica no backend.</div></div></div></section>
+</main>
+</div>
+
+<div id="modal" class="modal"><div class="modalbox"><h3>Novo ativo</h3><div class="formgrid"><input placeholder="Patrimônio"><select><option>Desktop</option><option>Notebook</option><option>Monitor</option></select><input placeholder="Marca"><input placeholder="Modelo"><input placeholder="Número de série"><select><option>UHE Tucuruí</option><option>SE Tucuruí</option><option>CTT</option><option>CPA</option></select></div><div class="modalactions"><button class="btn secondary" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="closeModal()">Salvar ativo</button></div></div></div>
+<script>
+const navButtons=[...document.querySelectorAll('.nav button')];const pages=[...document.querySelectorAll('.page')];
+navButtons.forEach(btn=>btn.addEventListener('click',()=>{navButtons.forEach(b=>b.classList.remove('active'));btn.classList.add('active');pages.forEach(p=>p.classList.remove('active'));document.getElementById(btn.dataset.page).classList.add('active')}));
+const search=document.getElementById('assetSearch');search?.addEventListener('input',e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('#assetRows tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')});
+function openModal(){document.getElementById('modal').classList.add('open')}function closeModal(){document.getElementById('modal').classList.remove('open')}
+</script>
+</body>
+</html>
