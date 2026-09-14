@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: TypeScript and frontend build
+        run: npm run build
+      - name: Validate backend syntax
+        run: node --check server/index.js && node --check server/extended.js && node --check server/auth.js && node --check server/db.js
