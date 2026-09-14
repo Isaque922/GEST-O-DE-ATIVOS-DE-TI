@@ -4,6 +4,7 @@ import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import { db } from './db.js';
 import { requireAdmin, requireAuth, signToken } from './auth.js';
+import { extendedRouter } from './extended.js';
 
 const app = express();
 const port = Number(process.env.PORT || 3333);
@@ -11,6 +12,7 @@ const origin = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
 app.use(cors({ origin }));
 app.use(express.json());
+app.use('/api', extendedRouter);
 
 const assetSelect = `
 SELECT a.id, a.patrimonio, a.type, a.brand, a.model, a.serial_number, a.status,
@@ -74,7 +76,7 @@ app.get('/api/assets', requireAuth, (req, res) => {
   const filters = [];
   if (onlyMine) { filters.push('a.current_user_id = ?'); params.push(req.user.id); }
   if (q) {
-    filters.push(`(a.patrimonio LIKE ? OR a.type LIKE ? OR a.model LIKE ? OR l.name LIKE ? OR u.registration LIKE ? OR u.name LIKE ?)`);
+    filters.push('(a.patrimonio LIKE ? OR a.type LIKE ? OR a.model LIKE ? OR l.name LIKE ? OR u.registration LIKE ? OR u.name LIKE ?)');
     const like = `%${q}%`;
     params.push(like, like, like, like, like, like);
   }
@@ -94,7 +96,7 @@ app.post('/api/assets', requireAuth, requireAdmin, (req, res) => {
   const { patrimonio, type, brand = null, model = null, serial_number = null, status = 'Disponível', location_id, notes = null } = req.body || {};
   if (!patrimonio || !type || !location_id) return res.status(400).json({ error: 'Patrimônio, tipo e localidade são obrigatórios.' });
   try {
-    const info = db.prepare(`INSERT INTO assets (patrimonio,type,brand,model,serial_number,status,location_id,notes) VALUES (?,?,?,?,?,?,?,?)`)
+    const info = db.prepare('INSERT INTO assets (patrimonio,type,brand,model,serial_number,status,location_id,notes) VALUES (?,?,?,?,?,?,?,?)')
       .run(patrimonio, type, brand, model, serial_number, status, location_id, notes);
     writeHistory({ assetId: info.lastInsertRowid, action: 'CRIADO', locationId: location_id, performedBy: req.user.id });
     res.status(201).json(db.prepare(`${assetSelect} WHERE a.id = ?`).get(info.lastInsertRowid));
@@ -107,7 +109,7 @@ app.put('/api/assets/:id', requireAuth, requireAdmin, (req, res) => {
   const current = db.prepare('SELECT * FROM assets WHERE id=?').get(req.params.id);
   if (!current) return res.status(404).json({ error: 'Ativo não encontrado.' });
   const next = { ...current, ...req.body, updated_at: new Date().toISOString() };
-  db.prepare(`UPDATE assets SET patrimonio=?, type=?, brand=?, model=?, serial_number=?, status=?, location_id=?, notes=?, updated_at=? WHERE id=?`)
+  db.prepare('UPDATE assets SET patrimonio=?, type=?, brand=?, model=?, serial_number=?, status=?, location_id=?, notes=?, updated_at=? WHERE id=?')
     .run(next.patrimonio, next.type, next.brand, next.model, next.serial_number, next.status, next.location_id, next.notes, next.updated_at, current.id);
   writeHistory({ assetId: current.id, userId: current.current_user_id, action: 'ATUALIZADO', locationId: next.location_id, performedBy: req.user.id, details: 'Dados do ativo atualizados.' });
   res.json(db.prepare(`${assetSelect} WHERE a.id = ?`).get(current.id));
@@ -116,7 +118,7 @@ app.put('/api/assets/:id', requireAuth, requireAdmin, (req, res) => {
 app.delete('/api/assets/:id', requireAuth, requireAdmin, (req, res) => {
   const asset = db.prepare('SELECT * FROM assets WHERE id=?').get(req.params.id);
   if (!asset) return res.status(404).json({ error: 'Ativo não encontrado.' });
-  db.prepare(`UPDATE assets SET status='Baixado', current_user_id=NULL, updated_at=? WHERE id=?`).run(new Date().toISOString(), asset.id);
+  db.prepare("UPDATE assets SET status='Baixado', current_user_id=NULL, updated_at=? WHERE id=?").run(new Date().toISOString(), asset.id);
   writeHistory({ assetId: asset.id, userId: asset.current_user_id, action: 'BAIXADO', locationId: asset.location_id, performedBy: req.user.id, details: 'Baixa patrimonial registrada.' });
   res.status(204).end();
 });
@@ -128,7 +130,7 @@ app.post('/api/assets/:id/custody', requireAuth, requireAdmin, (req, res) => {
   const user = db.prepare('SELECT id, registration, name FROM users WHERE registration=? AND active=1').get(String(registration || ''));
   if (!user) return res.status(404).json({ error: 'Colaborador não encontrado.' });
   const action = asset.current_user_id ? 'TRANSFERIDO' : 'VINCULADO';
-  db.prepare(`UPDATE assets SET current_user_id=?, status='Em uso', updated_at=? WHERE id=?`).run(user.id, new Date().toISOString(), asset.id);
+  db.prepare("UPDATE assets SET current_user_id=?, status='Em uso', updated_at=? WHERE id=?").run(user.id, new Date().toISOString(), asset.id);
   writeHistory({ assetId: asset.id, userId: user.id, action, locationId: asset.location_id, performedBy: req.user.id, details: `Cautela vinculada à matrícula ${user.registration}.` });
   res.json(db.prepare(`${assetSelect} WHERE a.id = ?`).get(asset.id));
 });
@@ -137,7 +139,7 @@ app.delete('/api/assets/:id/custody', requireAuth, requireAdmin, (req, res) => {
   const asset = db.prepare('SELECT * FROM assets WHERE id=?').get(req.params.id);
   if (!asset) return res.status(404).json({ error: 'Ativo não encontrado.' });
   const previousUser = asset.current_user_id;
-  db.prepare(`UPDATE assets SET current_user_id=NULL, status='Disponível', updated_at=? WHERE id=?`).run(new Date().toISOString(), asset.id);
+  db.prepare("UPDATE assets SET current_user_id=NULL, status='Disponível', updated_at=? WHERE id=?").run(new Date().toISOString(), asset.id);
   writeHistory({ assetId: asset.id, userId: previousUser, action: 'DESVINCULADO', locationId: asset.location_id, performedBy: req.user.id, details: 'Cautela encerrada.' });
   res.json(db.prepare(`${assetSelect} WHERE a.id = ?`).get(asset.id));
 });
@@ -150,7 +152,7 @@ app.get('/api/assets/:id/history', requireAuth, requireAdmin, (req, res) => {
 
 app.get('/api/dashboard', requireAuth, (req, res) => {
   if (req.user.role !== 'admin') {
-    const mine = db.prepare(`SELECT COUNT(*) AS total FROM assets WHERE current_user_id=? AND status <> 'Baixado'`).get(req.user.id).total;
+    const mine = db.prepare("SELECT COUNT(*) AS total FROM assets WHERE current_user_id=? AND status <> 'Baixado'").get(req.user.id).total;
     return res.json({ mine });
   }
   const totals = db.prepare(`SELECT
@@ -159,7 +161,7 @@ app.get('/api/dashboard', requireAuth, (req, res) => {
     SUM(CASE WHEN status='Disponível' THEN 1 ELSE 0 END) AS available,
     SUM(CASE WHEN status='Manutenção' THEN 1 ELSE 0 END) AS maintenance
     FROM assets`).get();
-  const byLocation = db.prepare(`SELECT l.id,l.code,l.name,COUNT(a.id) AS total FROM locations l LEFT JOIN assets a ON a.location_id=l.id AND a.status<>'Baixado' GROUP BY l.id ORDER BY total DESC`).all();
+  const byLocation = db.prepare("SELECT l.id,l.code,l.name,COUNT(a.id) AS total FROM locations l LEFT JOIN assets a ON a.location_id=l.id AND a.status<>'Baixado' GROUP BY l.id ORDER BY total DESC").all();
   res.json({ ...totals, byLocation });
 });
 
