@@ -2,48 +2,43 @@
 
 Plataforma web para controle, rastreabilidade e consulta de equipamentos de TI distribuídos entre UHE Tucuruí, Subestação de Tucuruí, Centro de Treinamento (CTT) e Centro de Proteção Ambiental (CPA).
 
-## Jeito mais fácil de abrir no Windows
+## Abrir rapidamente o MVP visual no Windows
 
-O repositório é privado. Entre no GitHub com a conta que tem acesso ao projeto e faça:
+O arquivo `MVP_VISUAL.html` é independente: não precisa de Node.js, npm, banco de dados, servidor ou extensão do VS Code.
 
-1. Abra o repositório `Isaque922/GEST-O-DE-ATIVOS-DE-TI`.
-2. Clique no botão **Code**.
-3. Clique em **Download ZIP**.
-4. Extraia o arquivo ZIP para uma pasta do computador.
-5. Abra a pasta extraída.
-6. Dê dois cliques em `ABRIR_SISTEMA.bat`.
+1. Entre no GitHub com a conta que tem acesso ao repositório privado.
+2. No repositório, clique em **Code > Download ZIP**.
+3. Extraia todo o ZIP para uma pasta.
+4. Abra a pasta extraída.
+5. Dê dois cliques em `ABRIR_SISTEMA.bat`.
 
-O arquivo instala as dependências, cria o `.env` automaticamente e inicia frontend e backend.
+O navegador abrirá o arquivo `MVP_VISUAL.html`. Também é possível dar dois cliques diretamente nesse HTML.
 
-Depois abra no navegador:
+> Importante: não tente executar os arquivos dentro do ZIP sem extraí-los primeiro.
 
-`http://localhost:5173`
+## Abrir o MVP pelo VS Code
 
-### Login de teste
+1. No VS Code, clique em **Arquivo > Abrir Pasta**.
+2. Selecione a pasta extraída `GEST-O-DE-ATIVOS-DE-TI-main`.
+3. Clique em **Terminal > Executar Tarefa**.
+4. Escolha **Abrir MVP Visual**.
 
-Administrador:
-- Matrícula: `1001`
-- Senha: `admin123`
+Outra opção é localizar `MVP_VISUAL.html` no Explorador do VS Code, clicar com o botão direito e escolher **Reveal in File Explorer/Mostrar no Explorador de Arquivos**; depois, dê dois cliques no arquivo.
 
-Colaborador:
-- Matrícula: `84215`
-- Senha: `user123`
+## O que funciona no MVP visual
 
-## Abrir pelo VS Code
+- Navegação entre Visão geral, Ativos, Cautelas, Colaboradores, Manutenções, Histórico e Login.
+- Busca na tabela de ativos.
+- Abertura e fechamento do formulário de novo ativo.
+- Layout responsivo para desktop e celular.
 
-É necessário ter o Node.js 20 ou superior instalado.
+O MVP usa dados demonstrativos. Login, salvamento e transferência não gravam informações no banco.
 
-Depois de baixar e extrair o ZIP:
+## Executar o sistema completo React + API
 
-1. Abra o VS Code.
-2. Clique em **Arquivo > Abrir Pasta**.
-3. Escolha a pasta `GEST-O-DE-ATIVOS-DE-TI-main`.
-4. No menu do VS Code, clique em **Terminal > Executar Tarefa**.
-5. Execute primeiro **Instalar dependências**.
-6. Depois execute **Abrir Sistema de Gestão de Ativos**.
-7. Abra `http://localhost:5173` no navegador.
+Use esta opção somente quando quiser testar autenticação, banco SQLite e operações persistentes. É necessário ter Node.js 20 ou superior.
 
-Também é possível usar o terminal:
+No terminal do VS Code, dentro da pasta do projeto:
 
 ```powershell
 Copy-Item .env.example .env
@@ -51,18 +46,41 @@ npm install
 npm run dev
 ```
 
+Abra:
+
+- Frontend: `http://localhost:5173`
+- API: `http://localhost:3333`
+- Teste da API: `http://localhost:3333/api/health`
+
+Também é possível usar **Terminal > Executar Tarefa** e executar:
+
+1. **Instalar dependências (sistema completo)**
+2. **Executar sistema completo**
+
+### Login de teste do sistema completo
+
+Administrador:
+
+- Matrícula: `1001`
+- Senha: `admin123`
+
+Colaborador:
+
+- Matrícula: `84215`
+- Senha: `user123`
+
 ## Clone com Git
 
-Como o projeto é privado, o clone só funciona se o Git estiver instalado e o computador estiver autenticado no GitHub:
+Como o repositório é privado, o clone HTTPS exige autenticação no GitHub. Para evitar esse bloqueio no primeiro teste, prefira **Code > Download ZIP**.
 
-```bash
+Depois de configurar o Git Credential Manager ou autenticar o GitHub no VS Code:
+
+```powershell
 git clone https://github.com/Isaque922/GEST-O-DE-ATIVOS-DE-TI.git
 cd GEST-O-DE-ATIVOS-DE-TI
-npm install
-npm run dev
 ```
 
-## Funcionalidades implementadas
+## Funcionalidades do sistema completo
 
 - Login por matrícula e senha.
 - Perfis Administrador e Usuário comum.
@@ -83,15 +101,11 @@ Frontend: React, TypeScript, Vite, Lucide React e CSS.
 
 Backend: Node.js, Express, SQLite/better-sqlite3, JWT e bcryptjs.
 
-## Endereços locais
-
-- Frontend: `http://localhost:5173`
-- API: `http://localhost:3333`
-- Teste da API: `http://localhost:3333/api/health`
-
 ## Estrutura principal
 
 ```text
+MVP_VISUAL.html
+ABRIR_SISTEMA.bat
 src/
   App.tsx
   api.ts
@@ -106,7 +120,6 @@ server/
   production.js
 .vscode/
   tasks.json
-ABRIR_SISTEMA.bat
 vite.config.ts
 ```
 
