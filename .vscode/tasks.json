@@ -2,13 +2,27 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Instalar dependências",
+      "label": "Abrir MVP Visual",
+      "type": "shell",
+      "windows": {
+        "command": "cmd /c start \"\" \"${workspaceFolder}\\MVP_VISUAL.html\""
+      },
+      "linux": {
+        "command": "xdg-open \"${workspaceFolder}/MVP_VISUAL.html\""
+      },
+      "osx": {
+        "command": "open \"${workspaceFolder}/MVP_VISUAL.html\""
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Instalar dependências (sistema completo)",
       "type": "shell",
       "command": "npm install",
       "problemMatcher": []
     },
     {
-      "label": "Abrir Sistema de Gestão de Ativos",
+      "label": "Executar sistema completo",
       "type": "shell",
       "command": "npm run dev",
       "isBackground": true,
