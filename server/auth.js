@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-const secret = process.env.JWT_SECRET || 'troque-esta-chave-em-producao';
+const secret = String(process.env.JWT_SECRET || '');
+if (secret.length < 32) {
+  throw new Error('Configure JWT_SECRET com pelo menos 32 caracteres.');
+}
 
 export function signToken(user) {
   return jwt.sign({ id: user.id, registration: user.registration, role: user.role, name: user.name }, secret, { expiresIn: '8h' });
