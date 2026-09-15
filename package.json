@@ -31,5 +31,9 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": "22.x",
+    "npm": ">=10"
   }
 }
