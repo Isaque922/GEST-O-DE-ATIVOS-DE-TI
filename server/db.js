@@ -5,10 +5,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.join(__dirname, 'data');
-fs.mkdirSync(dataDir, { recursive: true });
+const defaultDatabasePath = path.join(__dirname, 'data', 'ativos-ti.db');
+const databasePath = process.env.DATABASE_PATH
+  ? path.resolve(process.env.DATABASE_PATH)
+  : defaultDatabasePath;
 
-export const db = new Database(path.join(dataDir, 'ativos-ti.db'));
+fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+
+export const db = new Database(databasePath);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
@@ -71,21 +75,19 @@ const insertLocation = db.prepare('INSERT OR IGNORE INTO locations (code, name) 
 
 const userCount = db.prepare('SELECT COUNT(*) AS total FROM users').get().total;
 if (userCount === 0) {
-  const insertUser = db.prepare(`INSERT INTO users (registration, name, password_hash, role, employee_type) VALUES (?, ?, ?, ?, ?)`);
-  insertUser.run('1001', 'Técnico de TI', bcrypt.hashSync('admin123', 10), 'admin', 'quadro');
-  insertUser.run('84215', 'Carlos Almeida', bcrypt.hashSync('user123', 10), 'user', 'quadro');
-  insertUser.run('73104', 'Mariana Souza', bcrypt.hashSync('user123', 10), 'user', 'quadro');
-  insertUser.run('90217', 'Rafael Costa', bcrypt.hashSync('user123', 10), 'user', 'terceiro');
-}
+  const registration = String(process.env.ADMIN_REGISTRATION || '').trim();
+  const name = String(process.env.ADMIN_NAME || '').trim();
+  const password = String(process.env.ADMIN_PASSWORD || '');
 
-const assetCount = db.prepare('SELECT COUNT(*) AS total FROM assets').get().total;
-if (assetCount === 0) {
-  const loc = Object.fromEntries(db.prepare('SELECT id, code FROM locations').all().map(r => [r.code, r.id]));
-  const usr = Object.fromEntries(db.prepare('SELECT id, registration FROM users').all().map(r => [r.registration, r.id]));
-  const insert = db.prepare(`INSERT INTO assets (patrimonio,type,brand,model,status,location_id,current_user_id) VALUES (?,?,?,?,?,?,?)`);
-  insert.run('TU-10482','Desktop','Dell','OptiPlex 7090','Em uso',loc.UHE,usr['84215']);
-  insert.run('TU-11891','Notebook','Dell','Latitude 5420','Em uso',loc.CTT,usr['73104']);
-  insert.run('TU-12103','Monitor','Dell','P2422H','Em uso',loc.CPA,usr['90217']);
-  insert.run('TU-09721','Desktop','HP','ProDesk 400','Disponível',loc.SE,null);
-  insert.run('TU-12542','Notebook','Lenovo','ThinkPad E14','Manutenção',loc.UHE,null);
+  if (!registration || !name || password.length < 12) {
+    throw new Error(
+      'Banco vazio: configure ADMIN_REGISTRATION, ADMIN_NAME e ADMIN_PASSWORD (mínimo de 12 caracteres).'
+    );
+  }
+
+  db.prepare(
+    'INSERT INTO users (registration, name, password_hash, role, employee_type) VALUES (?, ?, ?, ?, ?)'
+  ).run(registration, name, bcrypt.hashSync(password, 12), 'admin', 'quadro');
+
+  console.log(`Administrador inicial criado para a matrícula ${registration}.`);
 }
