@@ -1,14 +1,15 @@
 {
   "name": "gestao-ativos-ti-tucurui",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm:dev:web\" \"npm:dev:api\"",
     "dev:web": "vite",
     "dev:api": "node --watch server/index.js",
+    "start": "node server/production.js",
     "start:api": "node server/index.js",
-    "start:web": "vite preview --host 0.0.0.0 --port ${PORT:-4173}",
+    "start:web": "vite preview --host 0.0.0.0 --port 4173",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
