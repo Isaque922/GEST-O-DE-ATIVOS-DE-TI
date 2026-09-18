@@ -116,6 +116,7 @@ No VS Code:
 ## Funcionalidades do sistema completo
 
 - Login com perfis Administrador e Usuário.
+- Usuário comum com consulta de todo o inventário em modo somente leitura.
 - Dashboard do inventário.
 - Cadastro e edição de ativos.
 - Busca por patrimônio, matrícula, responsável e localidade.

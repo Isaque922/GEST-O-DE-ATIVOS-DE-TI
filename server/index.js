@@ -74,7 +74,6 @@ app.get('/api/assets', requireAuth, asyncRoute(async (req, res) => {
   const q = String(req.query.q || '').trim();
   const filters = [];
   const params = [];
-  if (req.user.role !== 'admin') { params.push(req.user.id); filters.push(`a.current_user_id = $${params.length}`); }
   if (q) {
     params.push(`%${q}%`);
     const p = `$${params.length}`;
@@ -87,7 +86,6 @@ app.get('/api/assets', requireAuth, asyncRoute(async (req, res) => {
 app.get('/api/assets/:id', requireAuth, asyncRoute(async (req, res) => {
   const asset = await one(`${assetSelect} WHERE a.id = $1`, [req.params.id]);
   if (!asset) return res.status(404).json({ error: 'Ativo não encontrado.' });
-  if (req.user.role !== 'admin' && String(asset.current_user_id) !== String(req.user.id)) return res.status(403).json({ error: 'Este ativo não está sob sua cautela.' });
   res.json(asset);
 }));
 
@@ -148,10 +146,6 @@ app.get('/api/assets/:id/history', requireAuth, requireAdmin, asyncRoute(async (
 }));
 
 app.get('/api/dashboard', requireAuth, asyncRoute(async (req, res) => {
-  if (req.user.role !== 'admin') {
-    const mine = await one("SELECT COUNT(*)::int AS total FROM assets WHERE current_user_id=$1 AND status<>'Baixado'", [req.user.id]);
-    return res.json({ mine: mine.total });
-  }
   const totals = await one(`SELECT
     COUNT(*) FILTER (WHERE status<>'Baixado')::int AS total,
     COUNT(*) FILTER (WHERE current_user_id IS NOT NULL AND status<>'Baixado')::int AS custody,
