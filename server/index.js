@@ -46,6 +46,20 @@ app.get('/api/me', requireAuth, asyncRoute(async (req, res) => {
   res.json(user);
 }));
 
+app.put('/api/me/password', requireAuth, asyncRoute(async (req, res) => {
+  const currentPassword = String(req.body?.current_password || '');
+  const newPassword = String(req.body?.new_password || '');
+  if (!currentPassword || newPassword.length < 12) {
+    return res.status(400).json({ error: 'Informe a senha atual e uma nova senha com pelo menos 12 caracteres.' });
+  }
+  const user = await one('SELECT password_hash FROM users WHERE id=$1 AND active=TRUE', [req.user.id]);
+  if (!user || !bcrypt.compareSync(currentPassword, user.password_hash)) {
+    return res.status(400).json({ error: 'A senha atual está incorreta.' });
+  }
+  await query('UPDATE users SET password_hash=$1 WHERE id=$2', [bcrypt.hashSync(newPassword, 12), req.user.id]);
+  res.status(204).end();
+}));
+
 app.get('/api/locations', requireAuth, asyncRoute(async (_req, res) => {
   res.json(await many('SELECT id, code, name FROM locations ORDER BY name'));
 }));

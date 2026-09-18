@@ -1,4 +1,5 @@
 import express from 'express';
+import bcrypt from 'bcryptjs';
 import { many, one, query } from './db.js';
 import { requireAuth, requireAdmin } from './auth.js';
 
@@ -37,6 +38,15 @@ extendedRouter.put('/users/:id', requireAuth, requireAdmin, asyncRoute(async (re
   const updated = await one(`UPDATE users SET name=$1,role=$2,employee_type=$3,active=$4 WHERE id=$5
     RETURNING id,registration,name,role,employee_type,active`, [name,role,employee_type,Boolean(active),current.id]);
   res.json(updated);
+}));
+
+extendedRouter.put('/users/:id/password', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const password = String(req.body?.password || '');
+  if (password.length < 12) return res.status(400).json({ error: 'A nova senha deve ter pelo menos 12 caracteres.' });
+  const user = await one('SELECT id FROM users WHERE id=$1', [req.params.id]);
+  if (!user) return res.status(404).json({ error: 'Colaborador não encontrado.' });
+  await query('UPDATE users SET password_hash=$1 WHERE id=$2', [bcrypt.hashSync(password, 12), user.id]);
+  res.status(204).end();
 }));
 
 extendedRouter.get('/custodies', requireAuth, requireAdmin, asyncRoute(async (req, res) => {

@@ -36,6 +36,8 @@ export const api={
   users:(q='')=>request<User[]>(`/users${q?`?q=${encodeURIComponent(q)}`:''}`),
   createUser:(payload:unknown)=>request<User>('/users',{method:'POST',body:JSON.stringify(payload)}),
   updateUser:(id:number,payload:unknown)=>request<User>(`/users/${id}`,{method:'PUT',body:JSON.stringify(payload)}),
+  updateUserPassword:(id:number,password:string)=>request<void>(`/users/${id}/password`,{method:'PUT',body:JSON.stringify({password})}),
+  changePassword:(current_password:string,new_password:string)=>request<void>('/me/password',{method:'PUT',body:JSON.stringify({current_password,new_password})}),
   custodies:(q='')=>request<Custody[]>(`/custodies${q?`?q=${encodeURIComponent(q)}`:''}`),
   history:()=>request<History[]>('/history'),
   maintenance:()=>request<Maintenance[]>('/maintenance'),
