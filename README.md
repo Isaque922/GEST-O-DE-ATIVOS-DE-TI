@@ -2,6 +2,31 @@
 
 Plataforma web para controle, rastreabilidade e consulta de equipamentos de TI distribuídos entre UHE Tucuruí, Subestação de Tucuruí, Centro de Treinamento (CTT) e Centro de Proteção Ambiental (CPA).
 
+## Sistema publicado
+
+Acesse a aplicação em:
+
+**https://gestao-ativos-ti-tucurui.onrender.com**
+
+Entre com a matrícula e a senha do administrador configuradas no Render. No plano gratuito, o primeiro acesso após um período sem uso pode levar alguns segundos.
+
+### Cadastrar um patrimônio
+
+1. Entre no sistema com o perfil Administrador.
+2. Abra **Ativos** no menu lateral.
+3. Clique em **Novo ativo**.
+4. Informe patrimônio, tipo, marca, modelo, número de série, localidade, status e observações.
+5. Clique em **Salvar ativo**.
+
+### Editar um patrimônio
+
+1. Abra **Ativos**.
+2. Localize o equipamento pela pesquisa.
+3. Clique no ícone **Editar** na linha do equipamento.
+4. Altere as informações e clique em **Salvar ativo**.
+
+Os dados são armazenados no PostgreSQL do Neon e permanecem disponíveis após reinicializações e novos deploys.
+
 ## Publicar no Render com Neon PostgreSQL
 
 O projeto executa frontend e API no mesmo serviço Render e mantém os dados no PostgreSQL do Neon.
