@@ -18,7 +18,39 @@ CREATE TABLE IF NOT EXISTS maintenance (
 );
 CREATE INDEX IF NOT EXISTS idx_maintenance_asset ON maintenance(asset_id);
 CREATE INDEX IF NOT EXISTS idx_maintenance_status ON maintenance(status);
+CREATE TABLE IF NOT EXISTS app_settings (
+  id INTEGER PRIMARY KEY CHECK(id = 1),
+  app_name TEXT NOT NULL,
+  app_subtitle TEXT NOT NULL,
+  accent_color TEXT NOT NULL,
+  sidebar_color TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 `);
+
+db.prepare(`INSERT OR IGNORE INTO app_settings (id,app_name,app_subtitle,accent_color,sidebar_color)
+  VALUES (1,'ATIVOS TI','COMPLEXO TUCURUÍ','#0aa68f','#07111f')`).run();
+
+extendedRouter.get('/settings', (_req, res) => {
+  res.json(db.prepare('SELECT app_name,app_subtitle,accent_color,sidebar_color,updated_at FROM app_settings WHERE id=1').get());
+});
+
+extendedRouter.put('/settings', requireAuth, requireAdmin, (req, res) => {
+  const appName = String(req.body?.app_name || '').trim();
+  const appSubtitle = String(req.body?.app_subtitle || '').trim();
+  const accentColor = String(req.body?.accent_color || '');
+  const sidebarColor = String(req.body?.sidebar_color || '');
+  const hex = /^#[0-9a-fA-F]{6}$/;
+  if (!appName || appName.length > 40 || !appSubtitle || appSubtitle.length > 60) {
+    return res.status(400).json({ error: 'Informe nome e subtítulo dentro dos limites permitidos.' });
+  }
+  if (!hex.test(accentColor) || !hex.test(sidebarColor)) {
+    return res.status(400).json({ error: 'As cores devem estar no formato hexadecimal.' });
+  }
+  db.prepare(`UPDATE app_settings SET app_name=?,app_subtitle=?,accent_color=?,sidebar_color=?,updated_at=? WHERE id=1`)
+    .run(appName, appSubtitle, accentColor.toLowerCase(), sidebarColor.toLowerCase(), new Date().toISOString());
+  res.json(db.prepare('SELECT app_name,app_subtitle,accent_color,sidebar_color,updated_at FROM app_settings WHERE id=1').get());
+});
 
 extendedRouter.get('/users/:id', requireAuth, requireAdmin, (req, res) => {
   const user = db.prepare('SELECT id, registration, name, role, employee_type, active, created_at FROM users WHERE id=?').get(req.params.id);
