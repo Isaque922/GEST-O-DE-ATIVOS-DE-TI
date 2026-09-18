@@ -7,6 +7,7 @@ export type Dashboard = { total?:number; custody?:number; available?:number; mai
 export type Custody = { asset_id:number; patrimonio:string; type:string; brand:string|null; model:string|null; status:string; location:string; user_id:number; registration:string; responsible:string; employee_type:string; updated_at:string };
 export type History = { id:number; asset_id:number; patrimonio:string; type:string; action:string; details:string|null; created_at:string; user_name:string|null; registration:string|null; performed_by_name:string; location:string|null };
 export type Maintenance = { id:number; asset_id:number; patrimonio:string; type:string; brand:string|null; model:string|null; location:string; description:string; provider:string|null; opened_at:string; closed_at:string|null; status:'Aberta'|'Em andamento'|'Concluída'; notes:string|null; created_by_name:string };
+export type AppSettings = { app_name:string; app_subtitle:string; accent_color:string; sidebar_color:string; updated_at?:string };
 
 function getToken(){ return localStorage.getItem('ativos-ti-token'); }
 async function request<T>(path:string, options:RequestInit={}):Promise<T>{
@@ -17,6 +18,8 @@ async function request<T>(path:string, options:RequestInit={}):Promise<T>{
 }
 
 export const api={
+  settings:()=>request<AppSettings>('/settings'),
+  updateSettings:(payload:AppSettings)=>request<AppSettings>('/settings',{method:'PUT',body:JSON.stringify(payload)}),
   async login(registration:string,password:string){ const data=await request<{token:string;user:User}>('/auth/login',{method:'POST',body:JSON.stringify({registration,password})}); localStorage.setItem('ativos-ti-token',data.token); localStorage.setItem('ativos-ti-user',JSON.stringify(data.user)); return data; },
   logout(){ localStorage.removeItem('ativos-ti-token'); localStorage.removeItem('ativos-ti-user'); },
   savedUser():User|null{ try{return JSON.parse(localStorage.getItem('ativos-ti-user')||'null')}catch{return null} },
