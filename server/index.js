@@ -88,7 +88,21 @@ app.get('/api/assets', requireAuth, asyncRoute(async (req, res) => {
   const q = String(req.query.q || '').trim();
   const filters = [];
   const params = [];
-  if (q) {
+app.get('/api/users'
+app.post('/api/locations', requireAuth, requireAdmin, asyncRoute(async (req, res) => {
+  const code = String(req.body?.code || '').trim().toUpperCase();
+  const name = String(req.body?.name || '').trim();
+  if (!code || !name) return res.status(400).json({ error: 'Código e nome da localidade são obrigatórios.' });
+  if (code.length > 20 || name.length > 120) return res.status(400).json({ error: 'Use até 20 caracteres no código e 120 no nome.' });
+  try {
+    const created = await one('INSERT INTO locations (code,name) VALUES ($1,$2) RETURNING id,code,name', [code, name]);
+    res.status(201).json(created);
+  } catch (error) {
+    res.status(400).json({ error: error.code === '23505' ? 'Já existe uma localidade com esse código ou nome.' : 'Não foi possível cadastrar a localidade.' });
+  }
+}));
+
+        if (q) {
     params.push(`%${q}%`);
     const p = `$${params.length}`;
     filters.push(`(a.patrimonio ILIKE ${p} OR a.type ILIKE ${p} OR a.model ILIKE ${p} OR l.name ILIKE ${p} OR u.registration ILIKE ${p} OR u.name ILIKE ${p})`);
