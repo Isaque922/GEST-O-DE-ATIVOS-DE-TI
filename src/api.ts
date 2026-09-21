@@ -22,6 +22,8 @@ export const api={
   updateSettings:(payload:AppSettings)=>request<AppSettings>('/settings',{method:'PUT',body:JSON.stringify(payload)}),
   async login(registration:string,password:string){ const data=await request<{token:string;user:User}>('/auth/login',{method:'POST',body:JSON.stringify({registration,password})}); localStorage.setItem('ativos-ti-token',data.token); localStorage.setItem('ativos-ti-user',JSON.stringify(data.user)); return data; },
   logout(){ localStorage.removeItem('ativos-ti-token'); localStorage.removeItem('ativos-ti-user'); },
+assets:(q='')
+  createLocation:(payload:{code:string;name:string})=>request<Location>('/locations',{method:'POST',body:JSON.stringify(payload)}),
   savedUser():User|null{ try{return JSON.parse(localStorage.getItem('ativos-ti-user')||'null')}catch{return null} },
   dashboard:()=>request<Dashboard>('/dashboard'),
   locations:()=>request<Location[]>('/locations'),
