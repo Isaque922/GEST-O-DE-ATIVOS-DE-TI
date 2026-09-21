@@ -1,4 +1,6 @@
-import { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react';
+iasync function custody(a:Asset)
+ async function addLocation(){const name=prompt('Nome da nova localidade:')?.trim();if(!name)return;const code=prompt('Código curto da localidade (ex.: ALM):')?.trim();if(!code)return;try{const created=await api.createLocation({code,name});setLocations(current=>[...current,created].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')))}catch(e){onError((e as Error).message)}}async function custody(a:Asset)m{user.role==='admin'&&<button className="primary compact" onClick={()=>edit()}><Plus/> Novo ativo</button>}
+{user.role==='admin'&&<><button className="secondary" onClick={addLocation}><MapPin/> Nova localidade</button><button className="primary compact" onClick={()=>edit()}><Plus/> Novo ativo</button></>}port { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react';
 import { Activity, Archive, Building2, ChevronRight, CircleUserRound, ClipboardCheck, Computer, Edit3, History as HistoryIcon, LayoutDashboard, LogOut, MapPin, Monitor, Notebook, Palette, Plus, Search, ShieldCheck, Trash2, UserPlus, Users, Wrench, X } from 'lucide-react';
 import { api, AppSettings, Asset, Custody, Dashboard, History, Location, Maintenance, User } from './api';
 
